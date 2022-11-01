@@ -56,6 +56,12 @@ about:
     - List all files from a specific repository.
   license: Apache-2.0
   license_file: LICENSE
+  license_family: Apache
+  license_url: https://github.com/huggingface/huggingface_hub/blob/main/LICENSE
+  doc_url: https://huggingface.co/docs/hub/index
+  doc_source_url: https://github.com/huggingface/hub-docs/tree/main/docs/hub
+  dev_url: https://github.com/huggingface/huggingface_hub
+
 
 extra:
   recipe-maintainers:
