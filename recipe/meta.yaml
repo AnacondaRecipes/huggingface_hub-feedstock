@@ -11,18 +11,20 @@ source:
 
 build:
   number: 0
-  noarch: python
+  skip: true  # [py<37]
   entry_points:
     - huggingface-cli=huggingface_hub.commands.huggingface_cli:main
   script: {{ PYTHON }} -m pip install . -vv
 
 requirements:
   host:
+    - python
     - pip
-    - python >=3.6.0
+    - setuptools
+    - wheel
   run:
+    - python
     - filelock
-    - python >=3.6.0
     - pyyaml
     - packaging >=20.9
     - requests
