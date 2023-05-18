@@ -25,6 +25,7 @@ requirements:
   run:
     - python
     - filelock
+    - fsspec
     - importlib-metadata  # [py<38]
     - packaging >=20.9
     - pyyaml >=5.1
