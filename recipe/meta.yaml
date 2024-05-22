@@ -35,21 +35,12 @@ requirements:
     # cli
     - InquirerPy ==0.3.4
     # inference
-    - aiohttp
     - minijinja>=1.0
-    # torch
-    - torch
-    - safetensors
     # hf_transfer
     - hf_transfer>=0.1.4
     # fastai
-    - toml
     - fastai >=2.4
     - fastcore >=1.3.27
-    # tensorflow
-    - tensorflow
-    - pydot
-    - graphviz
     # tensorflow-testing
     - keras <3.0
 
