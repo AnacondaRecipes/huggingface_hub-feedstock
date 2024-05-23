@@ -33,7 +33,7 @@ requirements:
     - typing-extensions >=3.7.4.3
   run_constrained:
     # cli
-    - InquirerPy ==0.3.4
+    - inquirerPy ==0.3.4
     # inference
     - minijinja >=1.0
     # hf_transfer
