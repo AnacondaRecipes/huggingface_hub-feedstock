@@ -43,7 +43,6 @@ requirements:
     - keras <3.0
     - InquirerPy ==0.3.4   # extra:cli
     - typing-extensions >=4.8.0 # extra:typing
-  run_constrained_hf:
     - hf_transfer >=0.1.4   # extra:transfer
     - hf-xet >=1.1.1,<2.0.0   # extra:xet
 
