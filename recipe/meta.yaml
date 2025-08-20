@@ -153,6 +153,8 @@ test:
   requires:
     - pip
     - typer
+    # TypeError: Parameter.make_metavar() missing 1 required positional argument: 'ctx'
+    - click <8.2
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
