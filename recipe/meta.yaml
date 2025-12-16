@@ -1,13 +1,13 @@
 {% set name = "huggingface_hub" %}
-{% set version = "0.34.4" %}
+{% set version = "1.2.3" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: a4228daa6fb001be3f4f4bdaf9a0db00e1739235702848df00885c9b5742c85c
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 4ba57f17004fd27bb176a6b7107df579865d4cde015112db59184c51f5602ba7
 
 build:
   number: 0
@@ -28,21 +28,25 @@ requirements:
     - python
     - filelock
     - fsspec >=2023.5.0
-    - hf-xet >=1.1.2,<2.0.0
+    - hf-xet >=1.2.0,<2.0.0
     - packaging >=20.9
     - pyyaml >=5.1
     - requests
     - tqdm >=4.42.1
     - typing-extensions >=3.7.4.3
+    - httpx >=0.23.0,<1
+    - shellingham
+    - typer-slim
+    - typing_extensions >=3.7.4.3
   run_constrained:
     # extras["cli"]
     - inquirerpy >=0.3.4
     # extras["oauth"]
-    - authlib>=1.3.2
+    - authlib >=1.3.2
     # extras["hf_transfer"]
     - hf_transfer>=0.1.4
     # extras["fastai"]
-    - fastai >=2.4 
+    - fastai >=2.4
     - fastcore >=1.3.27
     # extras["mcp"]
     - mcp >=1.8.0
@@ -53,6 +57,9 @@ requirements:
     - libcst >=1.4.0
     # extras["torch"] -> safetensors[torch]
     - torch >=1.10
+    - typing_extensions >=4.8.0
+    - gradio >=5.0.0
+    - hf-xet >=1.1.3,<2.0.0
 
 test:
   imports:
@@ -180,7 +187,6 @@ about:
   license_family: Apache
   doc_url: https://huggingface.co/docs/hub/index
   dev_url: https://github.com/huggingface/huggingface_hub
-
 
 extra:
   recipe-maintainers:
