@@ -28,12 +28,13 @@ requirements:
     - python
     - filelock
     - fsspec >=2023.5.0
-    - hf-xet >=1.1.2,<2.0.0
+    - hf-xet >=1.2.0,<2.0.0
+    - httpx >=0.23.0,<1
     - packaging >=20.9
     - pyyaml >=5.1
-    - requests
+    - shellingham
     - tqdm >=4.42.1
-    - typing-extensions >=3.7.4.3
+    - typing-extensions >=4.1.0
   run_constrained:
     # extras["cli"]
     - inquirerpy >=0.3.4
