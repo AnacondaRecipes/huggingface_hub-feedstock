@@ -49,8 +49,6 @@ requirements:
     - mypy >=1.15.0
     - libcst >=1.4.0
     - ty
-    # extras["torch"] -> safetensors[torch]
-    - torch >=1.10
 
 test:
   imports:
