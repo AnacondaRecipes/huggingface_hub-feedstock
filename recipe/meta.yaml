@@ -140,7 +140,6 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - huggingface-cli --help
     - hf --help
     - tiny-agents --help
     # Upstream tests took too long and too flaky.
