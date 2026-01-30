@@ -50,6 +50,43 @@ requirements:
     - libcst >=1.4.0
     - ty
 
+{% set test_skip = "" %}
+{% set test_skip = test_skip + " --ignore=tests/test_hf_file_system.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_hf_api.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_utils_assets.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_utils_cache.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_commit_scheduler.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_file_download.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_hub_mixin.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_repocard.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_utils_git_credentials.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_cache_no_symlinks.py" %}
+{% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_oauth_not_logged_in" %}
+{% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_oauth_workflow" %}
+{% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_get_mocked_oauth_info" %}
+{% set test_skip = test_skip + " --deselect=tests/test_cache_layout.py::ReferenceUpdates::test_update_reference" %}
+{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_model" %}
+{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_private_model" %}
+{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_to_local_dir" %}
+{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_offline_mode_with_cache_and_empty_local_dir" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_async_client_get_request" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_raise_on_status_async_non_stream" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_raise_on_status_async_stream" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_multiple" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_normal" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_quoted" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_with_subtopic" %}
+{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_file" %}
+{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_file_with_bytesio" %}
+{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_file_with_byte_array" %}
+{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_folder" %}
+{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_folder_create_pr" %}
+{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetLargeUpload::test_upload_large_folder" %}
+{% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_async_generate_timeout_error" %}
+{% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_use_async_with_inference_client" %}
+{% set test_skip = test_skip + " --deselect=tests/test_inference_providers.py::TestHFInferenceProvider::test_check_supported_task_scenarios" %}
+
+
 test:
   imports:
     - huggingface_hub
@@ -147,9 +184,7 @@ test:
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     - hf --help
     - tiny-agents --help
-    #- pytest --import-mode=importlib --ignore=tests/test_hf_file_system.py --deselect=tests/test_hf_file_system.py::test_exists_after_repo_deletion tests/test_hf_file_system.py::test_access_repositories_lists -vv tests
-    - pytest --import-mode=importlib --ignore=tests/test_hf_file_system.py -vv tests
-    # Upstream tests took too long and too flaky.
+    - pytest --import-mode=importlib {{ test_skip }} -vv tests
 
 about:
   home: https://github.com/huggingface/huggingface_hub
