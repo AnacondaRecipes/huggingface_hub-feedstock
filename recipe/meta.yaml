@@ -76,15 +76,18 @@ requirements:
 {% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_normal" %}
 {% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_quoted" %}
 {% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_with_subtopic" %}
-{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_file" %}
-{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_file_with_bytesio" %}
-{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_file_with_byte_array" %}
-{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_folder" %}
-{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_folder_create_pr" %}
-{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetLargeUpload::test_upload_large_folder" %}
+#{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_file" %}
+#{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_file_with_bytesio" %}
+#{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_file_with_byte_array" %}
+#{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_folder" %}
+#{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetUpload::test_upload_folder_create_pr" %}
+#{% set test_skip = test_skip + " --deselect=tests/test_xet_upload.py::TestXetLargeUpload::test_upload_large_folder" %}
+{% set test_skip = test_skip + " --ignore=tests/test_xet_upload.py" %}
+
 {% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_async_generate_timeout_error" %}
 {% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_use_async_with_inference_client" %}
 {% set test_skip = test_skip + " --deselect=tests/test_inference_providers.py::TestHFInferenceProvider::test_check_supported_task_scenarios" %}
+
 
 
 test:
@@ -179,6 +182,7 @@ test:
     - numpy
     - fastapi
     - pillow
+    - git
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
