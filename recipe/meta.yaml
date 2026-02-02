@@ -90,9 +90,9 @@ requirements:
 
 # Flaky on OSX CI
 {% set test_skip = test_skip + " --deselect=tests/test_inference_endpoints.py::test_wait_timeout" %}  # [osx]
-{% set test_skip = test_skip + " --tests/test_utils_fixes.py::TestWeakFileLock::test_lock_log_every" %}  # [osx]
-{% set test_skip = test_skip + " --tests/test_utils_http.py::TestHttpBackoff::test_backoff_on_429_uses_ratelimit_header" %}  # [osx]
-{% set test_skip = test_skip + " --tests/test_utils_http.py::TestHttpBackoff::test_backoff_sleep_time" %}  # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_utils_fixes.py::TestWeakFileLock::test_lock_log_every" %}  # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_on_429_uses_ratelimit_header" %}  # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_sleep_time" %}  # [osx]
 
 
 test:
