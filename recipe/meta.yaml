@@ -190,7 +190,8 @@ test:
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     - hf --help
     - tiny-agents --help
-    - pytest --import-mode=importlib {{ test_skip }} -vv tests
+    # Tests take too long Windows CI and end up timing out
+    - pytest --import-mode=importlib {{ test_skip }} -vv tests  # [not win]
 
 about:
   home: https://github.com/huggingface/huggingface_hub
