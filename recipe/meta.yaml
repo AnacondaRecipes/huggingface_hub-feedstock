@@ -185,6 +185,7 @@ test:
     - fastapi
     - pillow
     - git
+    - git-lfs
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
