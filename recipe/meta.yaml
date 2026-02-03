@@ -49,7 +49,6 @@ requirements:
     - ruff >=0.9.0
     - mypy ==1.15.0
     - libcst >=1.4.0
-    - ty
 
 {% set test_skip = "" %}
 {% set test_skip = test_skip + " --ignore=tests/test_hf_file_system.py" %}
