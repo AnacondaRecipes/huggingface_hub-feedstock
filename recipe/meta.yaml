@@ -209,7 +209,7 @@ about:
   license: Apache-2.0
   license_file: LICENSE
   license_family: Apache
-  doc_url: https://huggingface.co/docs/huggingface_hub
+  doc_url: https://huggingface.co/docs/huggingface_hub/index
   dev_url: https://github.com/huggingface/huggingface_hub
 
 
