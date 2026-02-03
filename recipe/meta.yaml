@@ -33,6 +33,7 @@ requirements:
     - pyyaml >=5.1
     - shellingham
     - tqdm >=4.42.1
+    - typer-slim
     - typing-extensions >=4.1.0
   run_constrained:
     # extras["oauth"]
