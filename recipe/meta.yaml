@@ -51,6 +51,12 @@ requirements:
     - libcst >=1.4.0
 
 {% set test_skip = "" %}
+
+# The tests are flaky and take long time to execute. They are designed for network connected execution, and
+# may fail for various reasons (connection issues, authentication, timeouts). While problematic tests have
+# been disabled, the working subset is still significant enough to run, and are kept running in order to
+# prevent potential regressions in future versions.
+
 {% set test_skip = test_skip + " --ignore=tests/test_hf_file_system.py" %}
 {% set test_skip = test_skip + " --ignore=tests/test_hf_api.py" %}
 {% set test_skip = test_skip + " --ignore=tests/test_utils_assets.py" %}
@@ -185,7 +191,7 @@ test:
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     - hf --help
     - tiny-agents --help
-    # Tests take too long Windows CI and end up timing out
+    # Tests take too long to execute on Windows CI, and end up timing out.
     - pytest --import-mode=importlib {{ test_skip }} -vv tests  # [not win]
 
 about:
