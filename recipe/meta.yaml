@@ -1,20 +1,19 @@
 {% set name = "huggingface_hub" %}
-{% set version = "0.34.4" %}
+{% set version = "1.3.3" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: a4228daa6fb001be3f4f4bdaf9a0db00e1739235702848df00885c9b5742c85c
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: f8be6f468da4470db48351e8c77d6d8115dff9b3daeb30276e568767b1ff7574
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-  skip: true  # [py<38]
+  skip: true  # [py<39]
   entry_points:
-    - huggingface-cli=huggingface_hub.commands.huggingface_cli:main
     - hf=huggingface_hub.cli.hf:main
     - tiny-agents=huggingface_hub.inference._mcp.cli:app
 
@@ -28,31 +27,75 @@ requirements:
     - python
     - filelock
     - fsspec >=2023.5.0
-    - hf-xet >=1.1.2,<2.0.0
+    - hf-xet >=1.2.0,<2.0.0
+    - httpx >=0.23.0,<1
     - packaging >=20.9
     - pyyaml >=5.1
-    - requests
+    - shellingham
     - tqdm >=4.42.1
-    - typing-extensions >=3.7.4.3
+    - typer-slim
+    - typing-extensions >=4.1.0
   run_constrained:
-    # extras["cli"]
-    - inquirerpy >=0.3.4
     # extras["oauth"]
     - authlib>=1.3.2
-    # extras["hf_transfer"]
-    - hf_transfer>=0.1.4
     # extras["fastai"]
     - fastai >=2.4 
     - fastcore >=1.3.27
     # extras["mcp"]
     - mcp >=1.8.0
+    # extras["gradio"]
+    - gradio >=5.0.0  # [py>=310]
+    # extras["typing"]
+    - typing-extensions >=4.8.0
     # extras["quality"]
     - ruff >=0.9.0
-    - mypy >=1.14.1,<1.15.0  # [py==38]
-    - mypy >=1.15.0  # [py>=39]
+    - mypy ==1.15.0
     - libcst >=1.4.0
-    # extras["torch"] -> safetensors[torch]
-    - torch >=1.10
+
+{% set test_skip = "" %}
+
+# The tests are flaky and take long time to execute. They are designed for network connected execution, and
+# may fail for various reasons (connection issues, authentication, timeouts). While problematic tests have
+# been disabled, the working subset is still significant enough to run, and are kept running in order to
+# prevent potential regressions in future versions.
+
+{% set test_skip = test_skip + " --ignore=tests/test_hf_file_system.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_hf_api.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_utils_assets.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_utils_cache.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_commit_scheduler.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_file_download.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_hub_mixin.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_repocard.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_utils_git_credentials.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_cache_no_symlinks.py" %}
+{% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_oauth_not_logged_in" %}
+{% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_oauth_workflow" %}
+{% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_get_mocked_oauth_info" %}
+{% set test_skip = test_skip + " --deselect=tests/test_cache_layout.py::ReferenceUpdates::test_update_reference" %}
+{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_model" %}
+{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_private_model" %}
+{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_to_local_dir" %}
+{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_offline_mode_with_cache_and_empty_local_dir" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_async_client_get_request" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_raise_on_status_async_non_stream" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_raise_on_status_async_stream" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_multiple" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_normal" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_quoted" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_with_subtopic" %}
+{% set test_skip = test_skip + " --ignore=tests/test_xet_upload.py" %}
+
+{% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_async_generate_timeout_error" %}
+{% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_use_async_with_inference_client" %}
+{% set test_skip = test_skip + " --deselect=tests/test_inference_providers.py::TestHFInferenceProvider::test_check_supported_task_scenarios" %}
+
+# Flaky on OSX CI
+{% set test_skip = test_skip + " --deselect=tests/test_inference_endpoints.py::test_wait_timeout" %}  # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_utils_fixes.py::TestWeakFileLock::test_lock_log_every" %}  # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_on_429_uses_ratelimit_header" %}  # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_sleep_time" %}  # [osx]
+
 
 test:
   imports:
@@ -75,20 +118,6 @@ test:
     - huggingface_hub.cli.system
     - huggingface_hub.cli.upload
     - huggingface_hub.cli.upload_large_folder
-    - huggingface_hub.commands
-    - huggingface_hub.commands._cli_utils
-    - huggingface_hub.commands.delete_cache
-    - huggingface_hub.commands.download
-    - huggingface_hub.commands.env
-    - huggingface_hub.commands.lfs
-    - huggingface_hub.commands.repo
-    - huggingface_hub.commands.repo_files
-    - huggingface_hub.commands.scan_cache
-    - huggingface_hub.commands.tag
-    - huggingface_hub.commands.upload
-    - huggingface_hub.commands.upload_large_folder
-    - huggingface_hub.commands.user
-    - huggingface_hub.commands.version
     - huggingface_hub.community
     - huggingface_hub.constants
     - huggingface_hub.dataclasses
@@ -98,7 +127,6 @@ test:
     - huggingface_hub.hf_api
     - huggingface_hub.hf_file_system
     - huggingface_hub.hub_mixin
-    - huggingface_hub.inference_api
     - huggingface_hub.inference._client
     - huggingface_hub.inference._common
     - huggingface_hub.inference._generated
@@ -122,11 +150,9 @@ test:
     - huggingface_hub.inference._providers.replicate
     - huggingface_hub.inference._providers.sambanova
     - huggingface_hub.inference._providers.together
-    - huggingface_hub.keras_mixin
     - huggingface_hub.lfs
     - huggingface_hub.repocard
     - huggingface_hub.repocard_data
-    - huggingface_hub.repository
     - huggingface_hub.serialization
     - huggingface_hub.serialization._base
     - huggingface_hub.serialization._dduf
@@ -150,18 +176,25 @@ test:
     - huggingface_hub.utils.endpoint_helpers
     - huggingface_hub.utils.logging
     - huggingface_hub.utils.sha
+  source_files:
+    - tests
   requires:
     - pip
-    - typer
-    # TypeError: Parameter.make_metavar() missing 1 required positional argument: 'ctx'
-    - click <8.2
+    - pytest >=8.4.2
+    - pytest-mock
+    - jedi
+    - numpy
+    - fastapi
+    - pillow
+    - git
+    - git-lfs
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - huggingface-cli --help
     - hf --help
     - tiny-agents --help
-    # Upstream tests took too long and too flaky.
+    # Tests take too long to execute on Windows CI, and end up timing out.
+    - pytest --import-mode=importlib {{ test_skip }} -vv tests  # [not win]
 
 about:
   home: https://github.com/huggingface/huggingface_hub
@@ -178,7 +211,7 @@ about:
   license: Apache-2.0
   license_file: LICENSE
   license_family: Apache
-  doc_url: https://huggingface.co/docs/hub/index
+  doc_url: https://huggingface.co/docs/huggingface_hub/index
   dev_url: https://github.com/huggingface/huggingface_hub
 
 
