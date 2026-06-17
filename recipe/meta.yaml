@@ -10,7 +10,7 @@ source:
   sha256: f8be6f468da4470db48351e8c77d6d8115dff9b3daeb30276e568767b1ff7574
 
 build:
-  number: 0
+  number: 1
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   skip: true  # [py<39]
   entry_points:
@@ -47,10 +47,6 @@ requirements:
     - gradio >=5.0.0  # [py>=310]
     # extras["typing"]
     - typing-extensions >=4.8.0
-    # extras["quality"]
-    - ruff >=0.9.0
-    - mypy ==1.15.0
-    - libcst >=1.4.0
 
 {% set test_skip = "" %}
 
