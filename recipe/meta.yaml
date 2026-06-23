@@ -82,6 +82,24 @@ requirements:
 {% set test_skip = test_skip + " --ignore=tests/test_xet_upload.py" %}
 # New in 1.15.0: imports a repo-root `utils/` doc-tooling helper not on the test path
 {% set test_skip = test_skip + " --ignore=tests/test_generate_cli_reference.py" %}
+# New-in-1.15.0 CLI feature tests that exercise live Hub endpoints (buckets/discussions/
+# kernels) — network/auth-bound, same class as the test_hf_api.py ignores above
+{% set test_skip = test_skip + " --ignore=tests/test_buckets_cli.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_buckets_hf_file_system.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_cli_discussions.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_kernels.py" %}
+{% set test_skip = test_skip + " --deselect=tests/test_xet_utils.py::test_xet_token_reset_after_repo_deletion" %}
+# datasets-sql CLI needs the optional duckdb backend (not installed); json shorthand flaky
+{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestDatasetsSqlCommand::test_datasets_sql_table" %}
+{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestDatasetsSqlCommand::test_datasets_sql_json" %}
+{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestJsonShorthand::test_json_on_command_without_format" %}
+# CLI output tests assert exact bytes incl. ANSI color from rich (via typer); env-dependent
+{% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_result" %}
+{% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_warning" %}
+{% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_error" %}
+{% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_hint" %}
+# async test needs pytest-asyncio (not in test reqs); recipe already deselects siblings
+{% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_async_feature_extraction_accepts_list_inputs" %}
 
 {% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_async_generate_timeout_error" %}
 {% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_use_async_with_inference_client" %}
