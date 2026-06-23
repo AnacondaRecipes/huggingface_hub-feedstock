@@ -80,6 +80,8 @@ requirements:
 {% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_quoted" %}
 {% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_with_subtopic" %}
 {% set test_skip = test_skip + " --ignore=tests/test_xet_upload.py" %}
+# New in 1.15.0: imports a repo-root `utils/` doc-tooling helper not on the test path
+{% set test_skip = test_skip + " --ignore=tests/test_generate_cli_reference.py" %}
 
 {% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_async_generate_timeout_error" %}
 {% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_use_async_with_inference_client" %}
