@@ -1,5 +1,5 @@
 {% set name = "huggingface_hub" %}
-{% set version = "1.15.0" %}
+{% set version = "1.33.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 28abfdddda3927fd4de6a63cf26ab012498a2c24dae52baf150c5c6edf98a1d5
+  sha256: 367be21a201db9523eddf8aeac7048f2602c1b308691c97640d5e72ed188007e
 
 build:
   number: 0
@@ -25,14 +25,15 @@ requirements:
     - wheel
   run:
     - python
+    - click >=8.4.2,<9.0.0
     - filelock >=3.10.0
     - fsspec >=2023.5.0
-    - hf-xet >=1.4.3,<2.0.0
+    - hf-xet >=1.6.0,<2.0.0
     - httpx >=0.23.0,<1
     - packaging >=20.9
     - pyyaml >=5.1
+    - tomli >=1.1.0 # [py<311]
     - tqdm >=4.42.1
-    - typer >=0.20.0
     - typing-extensions >=4.1.0
   run_constrained:
     # extras["oauth"]
@@ -105,11 +106,36 @@ requirements:
 {% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_use_async_with_inference_client" %}
 {% set test_skip = test_skip + " --deselect=tests/test_inference_providers.py::TestHFInferenceProvider::test_check_supported_task_scenarios" %}
 
+
+# too many pytest INTERNALERRORS, likely due to monkey patching incompatible functions
+{% set test_skip = test_skip + " --ignore=tests/test_cli_output.py" %}
+
+# Too many failures; tests related to copying files to/from remote repos
+{% set test_skip = test_skip + " --ignore=tests/test_copy_files.py" %}
+
+# Connection and authentication errors
+{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestRepoListCommand::test_repo_list" %}
+
+# api fixture not available because conftest.py not included in pypi source dist:
+{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::TestSnapshotDownload" %}
+{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::TestResolveRevision" %}
+{% set test_skip = test_skip + " --deselect=tests/test_cache_layout.py::TestReferenceUpdates::test_update_reference" %}
+
+# Conection and authentication errors and/or the tests take too long.
+{% set test_skip = test_skip + " --ignore=tests/test_buckets.py" %}
+
 # Flaky on OSX CI
 {% set test_skip = test_skip + " --deselect=tests/test_inference_endpoints.py::test_wait_timeout" %}  # [osx]
 {% set test_skip = test_skip + " --deselect=tests/test_utils_fixes.py::TestWeakFileLock::test_lock_log_every" %}  # [osx]
 {% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_on_429_uses_ratelimit_header" %}  # [osx]
 {% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_sleep_time" %}  # [osx]
+
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_refreshes_near_expiry" %} # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_non_rotated_refresh_token_is_kept" %} # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_transient_failure_returns_stale_token" %} # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_invalid_grant_returns_stale_token_and_stops_retrying" %} # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_short_lived_token_does_not_refresh_on_every_call" %} # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_concurrent_refresh_by_other_process_is_adopted" %} # [osx]
 
 
 test:
@@ -150,21 +176,24 @@ test:
     - huggingface_hub.inference._generated.types.chat_completion
     - huggingface_hub.inference._providers
     - huggingface_hub.inference._providers._common
-    - huggingface_hub.inference._providers.black_forest_labs
+    - huggingface_hub.inference._providers.baseten
+    - huggingface_hub.inference._providers.cerebras
     - huggingface_hub.inference._providers.cohere
+    - huggingface_hub.inference._providers.deepinfra
     - huggingface_hub.inference._providers.fal_ai
     - huggingface_hub.inference._providers.featherless_ai
     - huggingface_hub.inference._providers.fireworks_ai
     - huggingface_hub.inference._providers.groq
     - huggingface_hub.inference._providers.hf_inference
-    - huggingface_hub.inference._providers.hyperbolic
-    - huggingface_hub.inference._providers.nebius
     - huggingface_hub.inference._providers.novita
     - huggingface_hub.inference._providers.nscale
     - huggingface_hub.inference._providers.openai
+    - huggingface_hub.inference._providers.ovhcloud
+    - huggingface_hub.inference._providers.publicai
     - huggingface_hub.inference._providers.replicate
-    - huggingface_hub.inference._providers.sambanova
     - huggingface_hub.inference._providers.together
+    - huggingface_hub.inference._providers.wavespeed
+    - huggingface_hub.inference._providers.zai_org
     - huggingface_hub.lfs
     - huggingface_hub.repocard
     - huggingface_hub.repocard_data
@@ -192,7 +221,7 @@ test:
     - huggingface_hub.utils.logging
     - huggingface_hub.utils.sha
   source_files:
-    - tests
+    - tests/
   requires:
     - pip
     - pytest >=8.4.2
@@ -209,7 +238,8 @@ test:
     - hf --help
     - tiny-agents --help
     # Tests take too long to execute on Windows CI, and end up timing out.
-    - pytest --import-mode=importlib {{ test_skip }} -vv tests  # [not win]
+    #- pytest --durations=100 --import-mode=importlib {{ test_skip }} --collect-only -vv tests  # [not win]
+    - pytest --durations=20 --import-mode=importlib {{ test_skip }} -vv --trace-config tests  # [not win]
 
 about:
   home: https://github.com/huggingface/huggingface_hub
