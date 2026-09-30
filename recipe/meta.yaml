@@ -130,12 +130,12 @@ requirements:
 {% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_on_429_uses_ratelimit_header" %}  # [osx]
 {% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_sleep_time" %}  # [osx]
 
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_refreshes_near_expiry" %} # [osx]
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_non_rotated_refresh_token_is_kept" %} # [osx]
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_transient_failure_returns_stale_token" %} # [osx]
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_invalid_grant_returns_stale_token_and_stops_retrying" %} # [osx]
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_short_lived_token_does_not_refresh_on_every_call" %} # [osx]
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_concurrent_refresh_by_other_process_is_adopted" %} # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_refreshes_near_expiry" %}
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_non_rotated_refresh_token_is_kept" %}
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_transient_failure_returns_stale_token" %}
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_invalid_grant_returns_stale_token_and_stops_retrying" %}
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_short_lived_token_does_not_refresh_on_every_call" %}
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_concurrent_refresh_by_other_process_is_adopted" %}
 
 
 test:
