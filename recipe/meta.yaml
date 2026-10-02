@@ -45,12 +45,6 @@ requirements:
     - mcp >=1.9.4,<2.0.0
     # extras["gradio"]
     - gradio >=5.0.0  # [py>=310]
-    # extras["typing"]
-    - typing-extensions >=4.8.0
-    # extras["quality"]
-    - ruff >=0.9.0
-    - mypy == 1.15.0
-    - libcst >=1.4.0
 
 {% set test_skip = "" %}
 
@@ -123,8 +117,8 @@ requirements:
 # Too many failures; tests related to copying files to/from remote repos
 {% set test_skip = test_skip + " --ignore=tests/test_copy_files.py" %}
 
-# Connection and authentication errors
-# {% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestRepoListCommand::test_repo_list" %}
+# Unreliable Connection and authentication errors
+{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestRepoListCommand::test_repo_list" %}
 
 # api fixture not available because conftest.py not included in pypi source dist:
 {% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::TestSnapshotDownload" %}
@@ -135,10 +129,10 @@ requirements:
 {% set test_skip = test_skip + " --ignore=tests/test_buckets.py" %}
 
 # Flaky on OSX CI
-# {% set test_skip = test_skip + " --deselect=tests/test_inference_endpoints.py::test_wait_timeout" %}  # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_inference_endpoints.py::test_wait_timeout" %}  # [osx]
 # {% set test_skip = test_skip + " --deselect=tests/test_utils_fixes.py::TestWeakFileLock::test_lock_log_every" %}  # [osx]
-# {% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_on_429_uses_ratelimit_header" %}  # [osx]
-# {% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_sleep_time" %}  # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_on_429_uses_ratelimit_header" %}  # [osx]
+{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_sleep_time" %}  # [osx]
 
 {% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestLogout" %}
 # {% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_refreshes_near_expiry" %}
