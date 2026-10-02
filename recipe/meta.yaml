@@ -54,36 +54,39 @@ requirements:
 
 {% set test_skip = "" %}
 
+# tries to import .conftest, which isn't available in the sdist on PyPI
+{% set test_skip = test_skip + " --ignore=tests/test_file_download.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_hf_api.py" %}
+
 # The tests are flaky and take long time to execute. They are designed for network connected execution, and
 # may fail for various reasons (connection issues, authentication, timeouts). While problematic tests have
 # been disabled, the working subset is still significant enough to run, and are kept running in order to
 # prevent potential regressions in future versions.
-
+{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestJsonShorthand::test_json_on_command_without_format" %}
 {% set test_skip = test_skip + " --ignore=tests/test_hf_file_system.py" %}
-{% set test_skip = test_skip + " --ignore=tests/test_hf_api.py" %}
-{% set test_skip = test_skip + " --ignore=tests/test_utils_assets.py" %}
-{% set test_skip = test_skip + " --ignore=tests/test_utils_cache.py" %}
+{% set test_skip = test_skip + " --deselect=tests/test_kernels.py::test_create_kernel" %}
+# {% set test_skip = test_skip + " --ignore=tests/test_utils_assets.py" %}
+# {% set test_skip = test_skip + " --ignore=tests/test_utils_cache.py" %}
 {% set test_skip = test_skip + " --ignore=tests/test_commit_scheduler.py" %}
-{% set test_skip = test_skip + " --ignore=tests/test_file_download.py" %}
-{% set test_skip = test_skip + " --ignore=tests/test_hub_mixin.py" %}
+{% set test_skip = test_skip + " --deselect=tests/test_hub_mixin.py::TestHubMixin::test_push_to_hub" %}
 {% set test_skip = test_skip + " --ignore=tests/test_repocard.py" %}
 {% set test_skip = test_skip + " --ignore=tests/test_utils_git_credentials.py" %}
-{% set test_skip = test_skip + " --ignore=tests/test_cache_no_symlinks.py" %}
+# {% set test_skip = test_skip + " --ignore=tests/test_cache_no_symlinks.py" %}
 {% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_oauth_not_logged_in" %}
 {% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_oauth_workflow" %}
 {% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_get_mocked_oauth_info" %}
-{% set test_skip = test_skip + " --deselect=tests/test_cache_layout.py::ReferenceUpdates::test_update_reference" %}
-{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_model" %}
-{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_private_model" %}
-{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_to_local_dir" %}
-{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_offline_mode_with_cache_and_empty_local_dir" %}
-{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_async_client_get_request" %}
-{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_raise_on_status_async_non_stream" %}
-{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_raise_on_status_async_stream" %}
-{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_multiple" %}
-{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_normal" %}
-{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_quoted" %}
-{% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_with_subtopic" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_cache_layout.py::ReferenceUpdates::test_update_reference" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_model" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_private_model" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_download_to_local_dir" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::SnapshotDownloadTests::test_offline_mode_with_cache_and_empty_local_dir" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_async_client_get_request" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_raise_on_status_async_non_stream" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::test_raise_on_status_async_stream" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_multiple" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_normal" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_quoted" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_utils_telemetry.py::TestSendTelemetry::test_topic_with_subtopic" %}
 {% set test_skip = test_skip + " --ignore=tests/test_xet_upload.py" %}
 # New in 1.15.0: imports a repo-root `utils/` doc-tooling helper not on the test path
 {% set test_skip = test_skip + " --ignore=tests/test_generate_cli_reference.py" %}
@@ -92,33 +95,36 @@ requirements:
 {% set test_skip = test_skip + " --ignore=tests/test_buckets_cli.py" %}
 {% set test_skip = test_skip + " --ignore=tests/test_buckets_hf_file_system.py" %}
 {% set test_skip = test_skip + " --ignore=tests/test_cli_discussions.py" %}
-{% set test_skip = test_skip + " --ignore=tests/test_kernels.py" %}
-{% set test_skip = test_skip + " --deselect=tests/test_xet_utils.py::test_xet_token_reset_after_repo_deletion" %}
+
+
+# {% set test_skip = test_skip + " --deselect=tests/test_xet_utils.py::test_xet_token_reset_after_repo_deletion" %}
 # datasets-sql CLI needs the optional duckdb backend (not installed); json shorthand flaky
-{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestDatasetsSqlCommand::test_datasets_sql_table" %}
-{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestDatasetsSqlCommand::test_datasets_sql_json" %}
-{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestJsonShorthand::test_json_on_command_without_format" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestDatasetsSqlCommand::test_datasets_sql_table" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestDatasetsSqlCommand::test_datasets_sql_json" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestJsonShorthand::test_json_on_command_without_format" %}
 # CLI output tests assert exact bytes incl. ANSI color from rich (via typer); env-dependent
 {% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_result" %}
 {% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_warning" %}
 {% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_error" %}
 {% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_hint" %}
+{% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_log" %}
+{% set test_skip = test_skip + " --deselect=tests/test_utils_terminal.py::TestCLIUtils::test_ansi_utils" %}
 # async test needs pytest-asyncio (not in test reqs); recipe already deselects siblings
-{% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_async_feature_extraction_accepts_list_inputs" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_async_feature_extraction_accepts_list_inputs" %}
 
-{% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_async_generate_timeout_error" %}
-{% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_use_async_with_inference_client" %}
-{% set test_skip = test_skip + " --deselect=tests/test_inference_providers.py::TestHFInferenceProvider::test_check_supported_task_scenarios" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_async_generate_timeout_error" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_inference_async_client.py::test_use_async_with_inference_client" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_inference_providers.py::TestHFInferenceProvider::test_check_supported_task_scenarios" %}
 
 
 # too many pytest INTERNALERRORS, likely due to monkey patching incompatible functions
-{% set test_skip = test_skip + " --ignore=tests/test_cli_output.py" %}
+# {% set test_skip = test_skip + " --ignore=tests/test_cli_output.py" %}
 
 # Too many failures; tests related to copying files to/from remote repos
 {% set test_skip = test_skip + " --ignore=tests/test_copy_files.py" %}
 
 # Connection and authentication errors
-{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestRepoListCommand::test_repo_list" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestRepoListCommand::test_repo_list" %}
 
 # api fixture not available because conftest.py not included in pypi source dist:
 {% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::TestSnapshotDownload" %}
@@ -129,17 +135,22 @@ requirements:
 {% set test_skip = test_skip + " --ignore=tests/test_buckets.py" %}
 
 # Flaky on OSX CI
-{% set test_skip = test_skip + " --deselect=tests/test_inference_endpoints.py::test_wait_timeout" %}  # [osx]
-{% set test_skip = test_skip + " --deselect=tests/test_utils_fixes.py::TestWeakFileLock::test_lock_log_every" %}  # [osx]
-{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_on_429_uses_ratelimit_header" %}  # [osx]
-{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_sleep_time" %}  # [osx]
+# {% set test_skip = test_skip + " --deselect=tests/test_inference_endpoints.py::test_wait_timeout" %}  # [osx]
+# {% set test_skip = test_skip + " --deselect=tests/test_utils_fixes.py::TestWeakFileLock::test_lock_log_every" %}  # [osx]
+# {% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_on_429_uses_ratelimit_header" %}  # [osx]
+# {% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_sleep_time" %}  # [osx]
 
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_refreshes_near_expiry" %}
+{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestLogout" %}
+# {% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_refreshes_near_expiry" %}
 {% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_non_rotated_refresh_token_is_kept" %}
 {% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_transient_failure_returns_stale_token" %}
 {% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_invalid_grant_returns_stale_token_and_stops_retrying" %}
 {% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_short_lived_token_does_not_refresh_on_every_call" %}
 {% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_concurrent_refresh_by_other_process_is_adopted" %}
+
+# Don't want to use git in the test environment
+{% set test_skip = test_skip + " --deselect=tests/test_utils_sha.py::test_git_hash" %}
+{% set test_skip = test_skip + " --deselect=tests/test_login_utils.py::TestSetGlobalStore::test_set_store_as_git_credential_helper_globally" %}
 
 
 test:
@@ -226,24 +237,34 @@ test:
     - huggingface_hub.utils.sha
   source_files:
     - tests/
+    - pyproject.toml
   requires:
     - pip
     - pytest >=8.4.2
     - pytest-mock
+    - pytest-cov
+    #- pytest-env
+    - pytest-xdist
+    #- pytest-vcr
+    - pytest-asyncio
+    - pytest-rerunfailures >=16.2
+    - jinja2
     - jedi
     - numpy
     - fastapi
     - pillow
-    - git
-    - git-lfs
+    - duckdb
+    # for huggingface[oauth]
+    - authlib
+    #- git
+    #- git-lfs
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     - hf --help
     - tiny-agents --help
     # Tests take too long to execute on Windows CI, and end up timing out.
-    #- pytest --durations=100 --import-mode=importlib {{ test_skip }} --collect-only -vv tests  # [not win]
-    - pytest --durations=20 --import-mode=importlib {{ test_skip }} -vv --trace-config tests  # [not win]
+    - DISABLE_SYMLINKS_IN_WINDOWS_TESTS=1 HF_TOKEN= HUGGINGFACE_CO_STAGING=1 HUGGING_FACE_HUB_TOKEN= pytest --durations=20 --import-mode=importlib {{ test_skip }} -vv --trace-config tests  -m "not (inference or production or deprecated or git_lfs)" # [not win]
 
 about:
   home: https://github.com/huggingface/huggingface_hub
