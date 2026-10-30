@@ -1,13 +1,69 @@
 {% set name = "huggingface_hub" %}
-{% set version = "1.33.0" %}
+{% set version = "2.4.0" %}
+{% set test_skip = "" %}
+{% set test_skip = test_skip + " --ignore=tests/test_file_download.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_hf_api.py" %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_cli.py::TestJsonShorthand::test_json_on_command_without_format"' %}
+{% set test_skip = test_skip + " --ignore=tests/test_hf_file_system.py" %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_kernels.py::test_create_kernel"' %}
+{% set test_skip = test_skip + " --ignore=tests/test_commit_scheduler.py" %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_hub_mixin.py::TestHubMixin::test_push_to_hub"' %}
+{% set test_skip = test_skip + " --ignore=tests/test_repocard.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_utils_git_credentials.py" %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_oauth.py::test_oauth_not_logged_in"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_oauth.py::test_oauth_workflow"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_oauth.py::test_get_mocked_oauth_info"' %}
+{% set test_skip = test_skip + " --ignore=tests/test_xet_upload.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_generate_cli_reference.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_buckets_cli.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_buckets_hf_file_system.py" %}
+{% set test_skip = test_skip + " --ignore=tests/test_cli_discussions.py" %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_cli_output.py::test_result"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_cli_output.py::test_warning"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_cli_output.py::test_error"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_cli_output.py::test_hint"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_cli_output.py::test_log"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_utils_terminal.py::TestCLIUtils::test_ansi_utils"' %}
+{% set test_skip = test_skip + " --ignore=tests/test_copy_files.py" %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_cli.py::TestRepoListCommand::test_repo_list"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_snapshot_download.py::TestSnapshotDownload"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_snapshot_download.py::TestResolveRevision"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_cache_layout.py::TestReferenceUpdates::test_update_reference"' %}
+{% set test_skip = test_skip + " --ignore=tests/test_buckets.py" %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_inference_endpoints.py::test_wait_timeout"' %}  # [osx]
+{% set test_skip = 'test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_on_429_uses_ratelimit_header"' %}  # [osx]
+{% set test_skip = 'test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_sleep_time"' %}  # [osx]
+{% set test_skip = 'test_skip + " --deselect=tests/test_auth.py::TestLogout"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_non_rotated_refresh_token_is_kept"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_transient_failure_returns_stale_token"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_invalid_grant_returns_stale_token_and_stops_retrying"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_short_lived_token_does_not_refresh_on_every_call"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_concurrent_refresh_by_other_process_is_adopted"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_utils_sha.py::test_git_hash"' %}
+{% set test_skip = 'test_skip + " --deselect=tests/test_login_utils.py::TestSetGlobalStore::test_set_store_as_git_credential_helper_globally"' %}
 
+# tries to import .conftest, which isn't available in the sdist on PyPI
+# The tests are flaky and take long time to execute. They are designed for network connected execution, and
+# may fail for various reasons (connection issues, authentication, timeouts). While problematic tests have
+# been disabled, the working subset is still significant enough to run, and are kept running in order to
+# prevent potential regressions in future versions.
+# New in 1.15.0: imports a repo-root `utils/` doc-tooling helper not on the test path
+# New-in-1.15.0 CLI feature tests that exercise live Hub endpoints (buckets/discussions/
+# kernels) — network/auth-bound, same class as the test_hf_api.py ignores above
+# CLI output tests assert exact bytes incl. ANSI color from rich (via typer); env-dependent
+# Too many failures; tests related to copying files to/from remote repos
+# Unreliable Connection and authentication errors
+# api fixture not available because conftest.py not included in pypi source dist:
+# Conection and authentication errors and/or the tests take too long.
+# Flaky on OSX CI
+# Don't want to use git in the test environment
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 367be21a201db9523eddf8aeac7048f2602c1b308691c97640d5e72ed188007e
+  sha256: 13a6158b9e3393d9d3f248ce99074d50c2a0a1449fb9d8e2f710751e2084c188
 
 build:
   number: 0
@@ -32,87 +88,22 @@ requirements:
     - httpx >=0.23.0,<1
     - packaging >=20.9
     - pyyaml >=5.1
-    - tomli >=1.1.0 # [py<311]
+    - tomli >=1.1.0  # [py<311]
     - tqdm >=4.42.1
     - typing-extensions >=4.1.0
+    - httpx2 >=2.0.0,<3
+    - typing_extensions >=4.1.0
   run_constrained:
     # extras["oauth"]
-    - authlib>=1.3.2
+    - authlib >=1.8.0
     # extras["fastai"]
-    - fastai >=2.4 
+    - fastai >=2.4
     - fastcore >=1.3.27
     # extras["mcp"]
     - mcp >=1.9.4,<2.0.0
     # extras["gradio"]
     - gradio >=5.0.0  # [py>=310]
-
-{% set test_skip = "" %}
-
-# tries to import .conftest, which isn't available in the sdist on PyPI
-{% set test_skip = test_skip + " --ignore=tests/test_file_download.py" %}
-{% set test_skip = test_skip + " --ignore=tests/test_hf_api.py" %}
-
-# The tests are flaky and take long time to execute. They are designed for network connected execution, and
-# may fail for various reasons (connection issues, authentication, timeouts). While problematic tests have
-# been disabled, the working subset is still significant enough to run, and are kept running in order to
-# prevent potential regressions in future versions.
-{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestJsonShorthand::test_json_on_command_without_format" %}
-{% set test_skip = test_skip + " --ignore=tests/test_hf_file_system.py" %}
-{% set test_skip = test_skip + " --deselect=tests/test_kernels.py::test_create_kernel" %}
-{% set test_skip = test_skip + " --ignore=tests/test_commit_scheduler.py" %}
-{% set test_skip = test_skip + " --deselect=tests/test_hub_mixin.py::TestHubMixin::test_push_to_hub" %}
-{% set test_skip = test_skip + " --ignore=tests/test_repocard.py" %}
-{% set test_skip = test_skip + " --ignore=tests/test_utils_git_credentials.py" %}
-{% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_oauth_not_logged_in" %}
-{% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_oauth_workflow" %}
-{% set test_skip = test_skip + " --deselect=tests/test_oauth.py::test_get_mocked_oauth_info" %}
-{% set test_skip = test_skip + " --ignore=tests/test_xet_upload.py" %}
-# New in 1.15.0: imports a repo-root `utils/` doc-tooling helper not on the test path
-{% set test_skip = test_skip + " --ignore=tests/test_generate_cli_reference.py" %}
-
-# New-in-1.15.0 CLI feature tests that exercise live Hub endpoints (buckets/discussions/
-# kernels) — network/auth-bound, same class as the test_hf_api.py ignores above
-{% set test_skip = test_skip + " --ignore=tests/test_buckets_cli.py" %}
-{% set test_skip = test_skip + " --ignore=tests/test_buckets_hf_file_system.py" %}
-{% set test_skip = test_skip + " --ignore=tests/test_cli_discussions.py" %}
-
-# CLI output tests assert exact bytes incl. ANSI color from rich (via typer); env-dependent
-{% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_result" %}
-{% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_warning" %}
-{% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_error" %}
-{% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_hint" %}
-{% set test_skip = test_skip + " --deselect=tests/test_cli_output.py::test_log" %}
-{% set test_skip = test_skip + " --deselect=tests/test_utils_terminal.py::TestCLIUtils::test_ansi_utils" %}
-
-# Too many failures; tests related to copying files to/from remote repos
-{% set test_skip = test_skip + " --ignore=tests/test_copy_files.py" %}
-
-# Unreliable Connection and authentication errors
-{% set test_skip = test_skip + " --deselect=tests/test_cli.py::TestRepoListCommand::test_repo_list" %}
-
-# api fixture not available because conftest.py not included in pypi source dist:
-{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::TestSnapshotDownload" %}
-{% set test_skip = test_skip + " --deselect=tests/test_snapshot_download.py::TestResolveRevision" %}
-{% set test_skip = test_skip + " --deselect=tests/test_cache_layout.py::TestReferenceUpdates::test_update_reference" %}
-
-# Conection and authentication errors and/or the tests take too long.
-{% set test_skip = test_skip + " --ignore=tests/test_buckets.py" %}
-
-# Flaky on OSX CI
-{% set test_skip = test_skip + " --deselect=tests/test_inference_endpoints.py::test_wait_timeout" %}  # [osx]
-{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_on_429_uses_ratelimit_header" %}  # [osx]
-{% set test_skip = test_skip + " --deselect=tests/test_utils_http.py::TestHttpBackoff::test_backoff_sleep_time" %}  # [osx]
-
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestLogout" %}
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_non_rotated_refresh_token_is_kept" %}
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_transient_failure_returns_stale_token" %}
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_invalid_grant_returns_stale_token_and_stops_retrying" %}
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_short_lived_token_does_not_refresh_on_every_call" %}
-{% set test_skip = test_skip + " --deselect=tests/test_auth.py::TestGetTokenAutoRefresh::test_concurrent_refresh_by_other_process_is_adopted" %}
-
-# Don't want to use git in the test environment
-{% set test_skip = test_skip + " --deselect=tests/test_utils_sha.py::test_git_hash" %}
-{% set test_skip = test_skip + " --deselect=tests/test_login_utils.py::TestSetGlobalStore::test_set_store_as_git_credential_helper_globally" %}
+    - typing_extensions >=4.8.0
 
 test:
   imports:
@@ -213,7 +204,6 @@ test:
     - fastapi
     - pillow
     - duckdb
-
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
@@ -222,7 +212,7 @@ test:
     # Tests take too long to execute on Windows CI, and end up timing out.
     # Variables below are taken from the pyproject.toml. pytest-env is not available on the main
     # channel so these cannot be picked up automatically.
-    - DISABLE_SYMLINKS_IN_WINDOWS_TESTS=1 HF_TOKEN= HUGGINGFACE_CO_STAGING=1 HUGGING_FACE_HUB_TOKEN= pytest --durations=20 --import-mode=importlib {{ test_skip }} -vv --trace-config tests  -m "not (inference or production or deprecated or git_lfs)" # [not win]
+    - DISABLE_SYMLINKS_IN_WINDOWS_TESTS=1 HF_TOKEN= HUGGINGFACE_CO_STAGING=1 HUGGING_FACE_HUB_TOKEN= pytest --durations=20 --import-mode=importlib {{ test_skip }} -vv --trace-config tests  -m "not (inference or production or deprecated or git_lfs)"  # [not win]
 
 about:
   home: https://github.com/huggingface/huggingface_hub
@@ -241,7 +231,6 @@ about:
   license_family: Apache
   doc_url: https://huggingface.co/docs/huggingface_hub/index
   dev_url: https://github.com/huggingface/huggingface_hub
-
 
 extra:
   recipe-maintainers:
